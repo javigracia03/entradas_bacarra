@@ -4,11 +4,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-def comprar_entrada():
+driver = webdriver.Firefox()
 
-    # create a new Firefox browser instance
-    driver = webdriver.Firefox()
 
+def openWebsite():
     # navigate to the website
     num_evento = "23008"
     url = "https://lagranmanzana.com/evento/" + num_evento
@@ -19,15 +18,26 @@ def comprar_entrada():
     # click the button
     button_cookies.click()
 
-    #Select number of tickets
-
-
+    #Switch to the iframe
     id_frame = "etktfrm" + num_evento
     frame = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, id_frame))
     )
 
     driver.switch_to.frame(frame)
+
+    
+def comprar_entrada():
+
+    # create a new Firefox browser instance
+    
+
+
+
+    #Select number of tickets
+
+
+    
 
     #Select the first item of the avaliable tickets
     tickets_number_list = driver.find_elements(By.CLASS_NAME, "list-group-item.et-entrada.false")[0]
@@ -44,4 +54,22 @@ def comprar_entrada():
     driver.execute_script("arguments[0].click();", continuar_btn)
 
 
-comprar_entrada()
+def refresh():
+    
+    driver.refresh()
+
+
+openWebsite()
+#comprar_entrada()
+#Check if there are tickets avaliable
+while(True):
+    try:
+        #Select the "No hay entradas text"
+        no_tickets = driver.find_elements(By.CLASS_NAME, ".list-group-item.text-center")[0]
+
+        print(no_tickets.text)
+        refresh()
+    except:
+        comprar_entrada()
+        break
+   
